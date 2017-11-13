@@ -1,4 +1,11 @@
-base_url: 'https://noc1.luxnetwork.eu'
-api_path: 'api/v0'
-username: ''
-password: ''
+instances:
+  luxnetwork:
+    base_url: 'https://noc1.luxnetwork.eu'
+    api_path: 'api/v0'
+    username: ''
+    password: ''
+  tlpo:
+    base_url: 'http://observium2.tl-noc.com'
+    api_path: 'api/v0'
+    username: ''
+    password: ''

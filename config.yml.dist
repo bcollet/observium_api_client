@@ -1,0 +1,4 @@
+base_url: 'https://noc1.luxnetwork.eu'
+api_path: 'api/v0'
+username: ''
+password: ''

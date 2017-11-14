@@ -14,6 +14,9 @@ def call_api(params, path):
     except:
         return
 
+    if response.status_code is not 200:
+        return
+
     return response.json()
 
 def print_data(key, value, suffix = None):

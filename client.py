@@ -44,8 +44,12 @@ def search_ports(args):
             return
 
         for port in data['ports'].itervalues():
-            print "=" * 80
             device = call_api(params, 'devices/%s' % port['device_id'])
+
+            if device['device']['disabled'] == "1": continue
+            if port['disabled'] == "1": continue
+
+            print "=" * 80
             print_data("Device", device['device']['hostname'])
             print_data("", "%s/device/device=%s" % (params['base_url'], port['device_id']))
             print_data("Port", port['port_label_short'])

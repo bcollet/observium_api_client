@@ -3,8 +3,11 @@
 import requests
 import yaml
 import argparse
+import os
 
-with open("config.yml", "r") as ymlfile:
+config = os.path.join(os.path.dirname(os.path.realpath(__file__)),"config.yml")
+
+with open(config, "r") as ymlfile:
     cfg = yaml.load(ymlfile)
 
 def call_api(params, path):

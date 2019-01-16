@@ -51,6 +51,7 @@ def search_ports(args):
 
             if device['device']['disabled'] == "1": continue
             if port['disabled'] == "1": continue
+            if port['deleted'] == "1": continue
 
             print "=" * 80
             print_data("Device", device['device']['hostname'])

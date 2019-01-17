@@ -28,11 +28,13 @@ def call_api(params, path):
 
 def print_data(key, value, suffix = None):
     if suffix is not None:
-        print("(0x(B %-18s (0x(B %s %-*s (0x(B" %
-            (key, value, term_cols - 26 - len(value) , suffix))
+        value_cols = term_cols - 26 - len(value)
+        print("(0x(B %-18s (0x(B %s %-*.*s (0x(B" %
+            (key, value, value_cols, value_cols, suffix))
     else:
-        print("(0x(B %-18s (0x(B %-*s (0x(B" %
-            (key, term_cols - 25, value))
+        value_cols = term_cols - 25
+        print("(0x(B %-18s (0x(B %-*.*s (0x(B" %
+            (key, value_cols, value_cols, value))
 
 # Test instances
 for instance in list(cfg['instances']):

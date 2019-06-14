@@ -56,6 +56,8 @@ def search_ports(args):
 
         for port in data['ports'].values():
             device = call_api(params, 'devices/%s' % port['device_id'])
+            address = call_api(params, 'address/?device_id=%s&interface=%s' % (port['device_id'], port['port_label_short']))
+            address6 = call_api(params, 'address/?af=ipv6&device_id=%s&interface=%s' % (port['device_id'], port['port_label_short']))
 
             if device['device']['disabled'] == "1": continue
             if port['disabled'] == "1": continue
@@ -77,6 +79,11 @@ def search_ports(args):
             print_data("Speed", port['ifHighSpeed'], "Mbps")
             print_data("Duplex", port['ifDuplex'])
             print_data("MTU", port['ifMtu'])
+            for ip in address['addresses']:
+                print_data("IP address", "%s/%s" % (ip['ipv4_address'],ip['ipv4_prefixlen']))
+
+            for ip6 in address6['addresses']:
+                print_data("IPv6 address", "%s/%s" % (ip6['ipv6_compressed'],ip6['ipv6_prefixlen']))
             print_data("Input rate", port['ifInOctets_rate'], "octets")
             print_data("Output rate", port['ifOutOctets_rate'], "octets")
             print_data("Input errors rate", port['ifInErrors_rate'])

@@ -1,3 +1,4 @@
+debug:        false
 instances:
   luxnetwork:
     base_url: 'https://noc1.luxnetwork.eu'

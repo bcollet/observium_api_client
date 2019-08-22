@@ -75,7 +75,8 @@ def search_ports(args):
                 short_hostname = device['hostname'].split(".",1)[0]
                 print("(0x(B %-25.25s (0x(B %-16.16s (0x(B %-*.*s (0x(B" %
                     (short_hostname, port['port_label_short'], value_cols,
-                     value_cols, port['port_descr_descr'] or port['ifAlias']))
+                     value_cols, port['ifAlias']))
+                     #value_cols, port['port_descr_descr'] or port['ifAlias']))
 
             else:
                 address = call_api(params, 'address/?device_id=%s&interface=%s' % (port['device_id'], port['port_label_short']))

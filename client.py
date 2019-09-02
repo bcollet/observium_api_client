@@ -9,7 +9,7 @@ import shutil
 config = os.path.join(os.path.dirname(os.path.realpath(__file__)),"config.yml")
 
 with open(config, "r") as ymlfile:
-    cfg = yaml.load(ymlfile)
+    cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
 term_cols = getattr(shutil.get_terminal_size((80, 20)), 'columns')
 
@@ -35,6 +35,19 @@ def print_data(term_cols, key, value, suffix = None):
         value_cols = term_cols - 25
         print("(0x(B %-18s (0x(B %-*.*s (0x(B" %
             (key, value_cols, value_cols, value))
+
+def sizeof_fmt(num, suffix='B', binary=True):
+    if binary:
+        units = ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']
+        base = 1024.0
+    else:
+        units = ['','K','M','G','T','P','E','Z']
+        base = 1000.0
+    for unit in units:
+        if abs(num) < base:
+            return "%3.1f %s%s" % (num, unit, suffix)
+        num /= base
+    return "%.1f %s%s" % (num, 'Y', suffix)
 
 # Test instances
 for instance in list(cfg['instances']):
@@ -105,8 +118,16 @@ def search_ports(args):
 
                 for ip6 in address6['addresses']:
                     print_data(term_cols, "IPv6 address", "%s/%s" % (ip6['ipv6_compressed'],ip6['ipv6_prefixlen']))
-                print_data(term_cols, "Input rate", port['ifInOctets_rate'], "octets")
-                print_data(term_cols, "Output rate", port['ifOutOctets_rate'], "octets")
+                print_data(term_cols, "Input rate", "%s (%s)" % (
+                    sizeof_fmt(int(port['ifInOctets_rate']),suffix='Bps'),
+                    sizeof_fmt(int(port['ifInOctets_rate'])*8,suffix='bps',binary=False),
+                    )
+                )
+                print_data(term_cols, "Output rate", "%s (%s)" % (
+                    sizeof_fmt(int(port['ifOutOctets_rate']),suffix='Bps'),
+                    sizeof_fmt(int(port['ifOutOctets_rate'])*8,suffix='bps',binary=False),
+                    )
+                )
                 print_data(term_cols, "Input errors rate", port['ifInErrors_rate'])
                 print_data(term_cols, "Output errors rate", port['ifOutErrors_rate'])
 

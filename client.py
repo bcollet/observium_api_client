@@ -71,12 +71,12 @@ def search_ports(args):
 
         if args.short:
             term_cols = getattr(shutil.get_terminal_size((80, 20)), 'columns')
-            value_cols = term_cols - 51
+            value_cols = term_cols - 59
 
-            print("(0l" + "q" * 27 + "w" + "q" * 18 + "w" + "q" * (term_cols - 49) + "k(B")
-            print("(0x(B %-25.25s (0x(B %-16.16s (0x(B %-*.*s (0x(B" %
-                ("Hostname", "Interface", value_cols, value_cols, "Description"))
-            print("(0t" + "q" * 27 + "n" + "q" * 18 + "n" + "q" * (term_cols - 49) + "u(B")
+            print("(0l" + "q" * 27 + "w" + "q" * 18 + "w" + "q" * 7 + "w" + "q" * (term_cols - 57) + "k(B")
+            print("(0x(B %-25.25s (0x(B %-16.16s (0x(B %-5.5s (0x(B %-*.*s (0x(B" %
+                ("Hostname", "Interface", "State", value_cols, value_cols, "Description"))
+            print("(0t" + "q" * 27 + "n" + "q" * 18 + "n" + "q" * 7 + "n" + "q" * (term_cols - 57) + "u(B")
 
         for port in data['ports'].values():
             if port['disabled'] == "1": continue
@@ -86,8 +86,8 @@ def search_ports(args):
 
             if args.short:
                 short_hostname = device['hostname'].split(".",1)[0]
-                print("(0x(B %-25.25s (0x(B %-16.16s (0x(B %-*.*s (0x(B" %
-                    (short_hostname, port['port_label_short'], value_cols,
+                print("(0x(B %-25.25s (0x(B %-16.16s (0x(B %-5.5s (0x(B %-*.*s (0x(B" %
+                    (short_hostname, port['port_label_short'], port['ifOperStatus'], value_cols,
                      value_cols, port['ifAlias']))
                      #value_cols, port['port_descr_descr'] or port['ifAlias']))
 
@@ -134,7 +134,7 @@ def search_ports(args):
                 print("(0m" + "q" * 20 + "v" + "q" * (term_cols - 23) + "j(B")
 
         if args.short:
-            print("(0m" + "q" * 27 + "v" + "q" * 18 + "v" + "q" * (term_cols - 49) + "j(B")
+            print("(0m" + "q" * 27 + "v" + "q" * 18 + "v" + "q" * 7 + "v" + "q" * (term_cols - 57) + "j(B")
 
 def search_devices(args):
     if args.field == "location":

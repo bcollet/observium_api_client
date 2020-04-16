@@ -144,8 +144,8 @@ def search_devices(args):
         data = call_api(params, 'devices/?%s=%s' % (args.field, args.string))
 
         if data['count'] < 1:
-            print("No device found for description %s on instance %s" %
-                (args.string, instance))
+            print("No device found for %s %s on instance %s" %
+                (args.field, args.string, instance))
             return
 
         if args.short:

@@ -81,7 +81,10 @@ def search_ports(args):
         for port in data['ports'].values():
             if port['disabled'] == "1": continue
             if port['deleted'] == "1": continue
-            device = devices[port['device_id']]
+            if port['device_id'] in devices:
+                device = devices[port['device_id']]
+            else:
+                continue
             if device['disabled'] == "1": continue
 
             if args.short:

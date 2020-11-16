@@ -21,7 +21,7 @@ def call_api(params, path):
     except:
         return
 
-    if response.status_code is not 200:
+    if response.status_code != 200:
         return
 
     return response.json()
@@ -88,7 +88,8 @@ def search_ports(args):
             if device['disabled'] == "1": continue
 
             if args.short:
-                short_hostname = device['hostname'].split(".",1)[0]
+                #short_hostname = device['hostname'].split(".",1)[0]
+                short_hostname = ".".join(device['hostname'].split(".")[0:-1])
                 print("(0x(B %-25.25s (0x(B %-16.16s (0x(B %-5.5s (0x(B %-*.*s (0x(B" %
                     (short_hostname, port['port_label_short'], port['ifOperStatus'], value_cols,
                      value_cols, port['ifAlias']))
@@ -164,7 +165,7 @@ def search_devices(args):
             if device['disabled'] == "1": continue
 
             if args.short:
-                short_hostname = device['hostname'].split(".",1)[0]
+                short_hostname = ".".join(device['hostname'].split(".")[0:-1])
                 print("(0x(B %-25.25s (0x(B %-26.26s (0x(B %-*.*s (0x(B" %
                 (short_hostname,
                  " ".join([device['vendor'] or "", device['hardware'] or ""]),

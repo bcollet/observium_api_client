@@ -60,6 +60,9 @@ for instance in list(cfg['instances']):
 
 def search_ports(args):
     for instance, params in cfg['instances'].items():
+        if args.instance is not None and instance not in args.instance.split(','):
+            continue
+
         data = call_api(params, 'ports/?ifAlias=%s' % args.string)
         data_devices = call_api(params, 'devices/')
         devices = data_devices['devices']
@@ -145,30 +148,34 @@ def search_devices(args):
         args.field = "location_text"
 
     for instance, params in cfg['instances'].items():
+        if args.instance is not None and instance not in args.instance.split(','):
+            continue
+
         data = call_api(params, 'devices/?%s=%s' % (args.field, args.string))
 
         if data['count'] < 1:
             print("No device found for %s %s on instance %s" %
                 (args.field, args.string, instance))
-            return
+            continue
 
         if args.short:
             term_cols = getattr(shutil.get_terminal_size((80, 20)), 'columns')
-            value_cols = term_cols - 61
+            value_cols = term_cols - 90
 
-            print("(0l" + "q" * 27 + "w" + "q" * 28 + "w" + "q" * (term_cols - 59) + "k(B")
-            print("(0x(B %-25.25s (0x(B %-26.26s (0x(B %-*.*s (0x(B" %
-                ("Hostname", "Hardware", value_cols, value_cols, "Serial"))
-            print("(0t" + "q" * 27 + "n" + "q" * 28 + "n" + "q" * (term_cols - 59) + "u(B")
+            print("(0l" + "q" * 27 + "w" + "q" * 28 + "w" + "q" * 28 + "w" + "q" * (term_cols - 88) + "k(B")
+            print("(0x(B %-25.25s (0x(B %-26.26s (0x(B %-26.26s (0x(B %-*.*s (0x(B" %
+                ("Hostname", "Hardware", "Software", value_cols, value_cols, "Serial"))
+            print("(0t" + "q" * 27 + "n" + "q" * 28 + "n" + "q" * 28 + "n" + "q" * (term_cols - 88) + "u(B")
 
         for device in data['devices'].values():
             if device['disabled'] == "1": continue
 
             if args.short:
                 short_hostname = ".".join(device['hostname'].split(".")[0:-1])
-                print("(0x(B %-25.25s (0x(B %-26.26s (0x(B %-*.*s (0x(B" %
+                print("(0x(B %-25.25s (0x(B %-26.26s (0x(B %-26.26s (0x(B %-*.*s (0x(B" %
                 (short_hostname,
                  " ".join([device['vendor'] or "", device['hardware'] or ""]),
+                 " ".join([device['os_text'],  device['version'] or ""]),
                  value_cols, value_cols, device['serial']))
             else:
                 term_cols = getattr(shutil.get_terminal_size((80, 20)), 'columns')
@@ -188,12 +195,13 @@ def search_devices(args):
                 print("(0m" + "q" * 20 + "v" + "q" * (term_cols - 23) + "j(B")
 
         if args.short:
-            print("(0m" + "q" * 27 + "v" + "q" * 28 + "v" + "q" * (term_cols - 59) + "j(B")
+            print("(0m" + "q" * 27 + "v" + "q" * 28 + "v" + "q" * 28 + "v" + "q" * (term_cols - 88) + "j(B")
 
 
 # Argument parsing
 parser = argparse.ArgumentParser()
-subparsers = parser.add_subparsers(help='Action to perform',dest='action')
+parser.add_argument('-i','--instance', type=str, help="Comma-separated list of Observium instances to use",nargs='?', default=None)
+subparsers = parser.add_subparsers(help='Action to perform',dest='action',required=True)
 
 parser_search_port_by_descr = subparsers.add_parser('search_ports', help="Search ports by description")
 parser_search_port_by_descr.add_argument('string', type=str, help="String to search")

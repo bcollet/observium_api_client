@@ -1,12 +1,12 @@
 debug:        false
 instances:
-  luxnetwork:
-    base_url: 'https://noc.luxnetwork.eu'
+  observium1:
+    base_url: 'https://observium1'
     api_path: 'api/v0'
     username: ''
     password: ''
-  tlpo:
-    base_url: 'http://observium2.tl-noc.com'
+  observium2:
+    base_url: 'http://observium2'
     api_path: 'api/v0'
     username: ''
     password: ''

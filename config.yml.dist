@@ -4,7 +4,7 @@ instances:
     base_url: 'https://observium1'
     api_path: 'api/v0'
     username: ''
-    password: ''
+    password_cmd: ''
   observium2:
     base_url: 'http://observium2'
     api_path: 'api/v0'

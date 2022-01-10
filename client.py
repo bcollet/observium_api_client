@@ -5,6 +5,7 @@ import yaml
 import argparse
 import os
 import shutil
+import subprocess
 
 config = os.path.join(os.path.dirname(os.path.realpath(__file__)),"config.yml")
 
@@ -16,8 +17,12 @@ term_cols = getattr(shutil.get_terminal_size((80, 20)), 'columns')
 def call_api(params, path):
     url = '/'.join((params['base_url'],params['api_path'],path))
     try:
-        response = requests.get(url, auth=(params['username'],
-                                params['password']))
+        if 'password_cmd' in params:
+            result = subprocess.run(params['password_cmd'].split(), stdout=subprocess.PIPE)
+            password = result.stdout.decode('utf-8')
+        else:
+            password = params['password']
+        response = requests.get(url, auth=(params['username'],password))
     except:
         return
 
@@ -48,15 +53,6 @@ def sizeof_fmt(num, suffix='B', binary=True):
             return "%3.1f %s%s" % (num, unit, suffix)
         num /= base
     return "%.1f %s%s" % (num, 'Y', suffix)
-
-# Test instances
-for instance in list(cfg['instances']):
-    test = call_api(cfg['instances'][instance], 'devices')
-    if test is None:
-        if cfg['debug']: print("Instance %s is not working, disabling" % instance)
-        cfg['instances'].pop(instance)
-    else:
-        if cfg['debug']: print("Instance %s is working" % instance)
 
 def search_ports(args):
     for instance, params in cfg['instances'].items():
@@ -196,6 +192,16 @@ def search_devices(args):
 
         if args.short:
             print("(0m" + "q" * 27 + "v" + "q" * 28 + "v" + "q" * 28 + "v" + "q" * (term_cols - 88) + "j(B")
+
+
+# Test instances
+for instance in list(cfg['instances']):
+    test = call_api(cfg['instances'][instance], 'devices')
+    if test is None:
+        if cfg['debug']: print("Instance %s is not working, disabling" % instance)
+        cfg['instances'].pop(instance)
+    else:
+        if cfg['debug']: print("Instance %s is working" % instance)
 
 
 # Argument parsing
